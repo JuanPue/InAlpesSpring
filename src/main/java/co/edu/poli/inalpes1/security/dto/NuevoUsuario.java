@@ -2,7 +2,6 @@ package co.edu.poli.inalpes1.security.dto;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
