@@ -13,6 +13,7 @@ import co.edu.poli.inalpes1.model.Inmueble;
 import co.edu.poli.inalpes1.model.Usuario;
 
 public class UsuarioPrincipal implements UserDetails{
+	
 
 	 private String nombre;
 	 

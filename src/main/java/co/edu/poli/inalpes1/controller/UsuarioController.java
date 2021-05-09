@@ -1,6 +1,7 @@
 package co.edu.poli.inalpes1.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -87,5 +88,10 @@ public class UsuarioController {
 	public Iterable<Usuario> usuarioId(@PathVariable Long id) {
 		Iterable<Usuario> usuario = usuariorepository.GetUsuario(id);
 		return usuario;
+	}
+	
+	@GetMapping("usuarioCo/{correo}")
+	public Iterable<Usuario> getByCorreo(@PathVariable String correo)	{
+		return usuariorepository.usuCorreo(correo);
 	}
 }

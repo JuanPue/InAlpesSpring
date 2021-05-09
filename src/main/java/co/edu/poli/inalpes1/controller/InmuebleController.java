@@ -67,12 +67,9 @@ public class InmuebleController {
 	}
 
 	@DeleteMapping("/Inmuebles/{id}")
-	public Inmueble deleteInmueble(@PathVariable Long id, @RequestBody Inmueble i) {
-		
+	public Inmueble deleteInmueble(@PathVariable Long id) {
 		Inmueble inmueble = inmuebleRepository.findById(id).get();
-		
-		inmueble.setEstado(i.getEstado());
-		
+		inmueble.setEstado("Inactivo");
 		inmuebleRepository.save(inmueble);
 		return inmueble; 
 	}
