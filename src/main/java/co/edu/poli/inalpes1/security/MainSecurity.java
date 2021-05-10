@@ -67,9 +67,13 @@ public class MainSecurity extends WebSecurityConfigurerAdapter{
 		.antMatchers("/inalpes/api/auth/**").permitAll()
 		.antMatchers(HttpMethod.GET,"/inalpes/api/Inmuebles").permitAll()
 		.antMatchers(HttpMethod.GET,"/inalpes/api/Inmuebles/**").permitAll()
+		.antMatchers(HttpMethod.GET,"/inalpes/api/InmueblesA").permitAll()
 		.antMatchers(HttpMethod.DELETE,"/inalpes/api/Inmuebles/**").hasAnyRole("ADMIN, USER, COMERCIAL")
+		.antMatchers(HttpMethod.PUT,"/inalpes/api/Inmuebles").hasAnyRole("ADMIN, USER")
+		.antMatchers(HttpMethod.POST,"/inalpes/api/Inmuebles/**").hasAnyRole("ADMIN, USER")
+		.antMatchers(HttpMethod.DELETE,"/inalpes/api/Inmueblesvender/**").hasAnyRole("ADMIN, COMERCIAL")
 		.antMatchers(HttpMethod.GET,"/inalpes/api/usuarioIn/**").hasAnyRole("ADMIN, USER, COMERCIAL")
-		.antMatchers(HttpMethod.GET,"/inalpes/api/usuarioCo/**").permitAll()
+		.antMatchers(HttpMethod.GET,"/inalpes/api/usuarioCo/**").hasAnyRole("ADMIN, USER, COMERCIAL")
 		.antMatchers("/inalpes/api/**").hasAnyRole("ADMIN")
 		.anyRequest().authenticated()
 		.and()
@@ -77,18 +81,6 @@ public class MainSecurity extends WebSecurityConfigurerAdapter{
 		.and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-		/*
-		 			.authorizeRequests()
-		    .antMatchers(HttpMethod.GET,"/api/v1/Rooms").hasAnyRole("ADMIN", "USER")
-		    .antMatchers(HttpMethod.GET,"/api/v1/Rooms/**").hasAnyRole("ADMIN", "USER")
-		    .antMatchers(HttpMethod.DELETE,"/api/v1/**").hasAnyRole("ADMIN")
-		    .antMatchers(HttpMethod.POST,"/api/v1/**").hasAnyRole("ADMIN")
-		    .antMatchers(HttpMethod.PUT,"/api/v1/**").hasAnyRole("ADMIN")
-			.and()
-			.httpBasic(); //authentication method
-			//.formLogin(); //authentication method
-
-		 */
 	}
 	
 	

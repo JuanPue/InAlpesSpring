@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.poli.inalpes1.repository.InmuebleRepository;
 import co.edu.poli.inalpes1.repository.UsuarioRepository;
-
+import co.edu.poli.inalpes1.model.Inmueble;
 import co.edu.poli.inalpes1.model.Usuario;
 
 
@@ -23,6 +24,7 @@ import co.edu.poli.inalpes1.model.Usuario;
 @RequestMapping("/inalpes/api")
 public class UsuarioController {
 
+	
 	@Autowired
 	private UsuarioRepository usuariorepository;
 
@@ -94,4 +96,5 @@ public class UsuarioController {
 	public Iterable<Usuario> getByCorreo(@PathVariable String correo)	{
 		return usuariorepository.usuCorreo(correo);
 	}
+	
 }

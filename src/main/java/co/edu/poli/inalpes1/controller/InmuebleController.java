@@ -15,16 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.poli.inalpes1.model.Inmueble;
+import co.edu.poli.inalpes1.model.Usuario;
 import co.edu.poli.inalpes1.repository.InmuebleRepository;
+import co.edu.poli.inalpes1.repository.UsuarioRepository;
 
 @RestController
 @RequestMapping("/inalpes/api")
 public class InmuebleController {
 
 	@Autowired
-	private InmuebleRepository inmuebleRepository;
+	private UsuarioRepository usuarioRepository;
 	
-    @PreAuthorize("permitAll()")
+	@Autowired
+	private InmuebleRepository inmuebleRepository;
+
 	@GetMapping("/Inmuebles")
 	public List<Inmueble> getAllInmuebles() {
 		return inmuebleRepository.findAll();
@@ -36,15 +40,19 @@ public class InmuebleController {
 		return inmueble;
 	}
 	
-	@PostMapping("/Inmuebles")
-	public Inmueble insertInmueble(@RequestBody Inmueble inmueble) {		
-		inmuebleRepository.save(inmueble);
+	@PostMapping("/Inmuebles/{id}")
+	public Inmueble insertInmueble(@RequestBody Inmueble inmueble, @PathVariable Long id) {
+			Usuario usuario = usuarioRepository.findById(id).get();
+			inmueble.setUsuario(usuario);
+			usuario.getInmueble().add(inmueble);
+			usuarioRepository.save(usuario);
+			inmuebleRepository.save(inmueble);
 		return inmueble;
 	}
 	
-	@PutMapping("/Inmuebles/{id}")
-	public Inmueble editInmueble(@PathVariable Long id, @RequestBody Inmueble newInmueble) {
-		Inmueble inmueble = inmuebleRepository.findById(id).get();
+	@PutMapping("/Inmuebles")
+	public Inmueble editInmueble(@RequestBody Inmueble newInmueble) {
+		Inmueble inmueble = inmuebleRepository.findById(newInmueble.getId()).get();
 		
 		inmueble.setEstado(newInmueble.getEstado());
 		inmueble.setTipo(newInmueble.getTipo());
@@ -60,7 +68,6 @@ public class InmuebleController {
 		inmueble.setTipo_inmueble(newInmueble.getTipo_inmueble());
 		inmueble.setCiudad(newInmueble.getCiudad());
 		inmueble.setBarrio(newInmueble.getBarrio());
-		inmueble.setUsuario(newInmueble.getUsuario());
 		
 		inmuebleRepository.save(inmueble);
 		return inmueble; 
@@ -70,6 +77,13 @@ public class InmuebleController {
 	public Inmueble deleteInmueble(@PathVariable Long id) {
 		Inmueble inmueble = inmuebleRepository.findById(id).get();
 		inmueble.setEstado("Inactivo");
+		inmuebleRepository.save(inmueble);
+		return inmueble; 
+	}
+	@DeleteMapping("/Inmueblesvender/{id}")
+	public Inmueble venderInmueble(@PathVariable Long id) {
+		Inmueble inmueble = inmuebleRepository.findById(id).get();
+		inmueble.setEstado("Vendido");
 		inmuebleRepository.save(inmueble);
 		return inmueble; 
 	}
@@ -83,5 +97,6 @@ public class InmuebleController {
 	public List <Inmueble> getActivos() {
 		return inmuebleRepository.getActivos();
 	}
+	
 	
 }
