@@ -20,6 +20,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 	Optional<Usuario> findByCorreo(String correo);
 	
+	@Query ("FROM Usuario where id = ?1")
+	Iterable<Usuario> findByI2d(Long id);
+	
 	@Query("FROM Usuario where correo = ?1")
 	Iterable<Usuario> usuCorreo(String correo);
 	

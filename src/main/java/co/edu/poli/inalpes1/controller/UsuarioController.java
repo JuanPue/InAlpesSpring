@@ -1,7 +1,9 @@
 package co.edu.poli.inalpes1.controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,14 +26,11 @@ import co.edu.poli.inalpes1.model.Usuario;
 @RequestMapping("/inalpes/api")
 public class UsuarioController {
 
+	@Autowired
+	private InmuebleRepository inmuebleRepository;
 	
 	@Autowired
 	private UsuarioRepository usuariorepository;
-
-	@GetMapping("/Wellcome")
-	public String reWell() {
-		return "Prueba";
-	}
 	
 	@GetMapping("/usuario")
 	public List<Usuario> getAllUsuarios() {
@@ -43,6 +42,13 @@ public class UsuarioController {
 		Usuario usuario = usuariorepository.findById(id).get();
 		return usuario;
 	}
+	
+	@GetMapping("/usuario2/{id}")
+	public Iterable<Usuario> getUsuarioId2(@PathVariable Long id) {
+		Iterable<Usuario> usuario = usuariorepository.findByI2d(id);
+		return usuario;
+	}
+	
 	
 	@GetMapping("/usuarioLogin/{correo}/{clave}")
 	public Usuario getUsuarioLogin(@PathVariable String correo, @PathVariable String clave) {
@@ -57,9 +63,9 @@ public class UsuarioController {
 		
 	}
 	
-	@PutMapping("/usuario/{id}")
-	public Usuario editarUsuario(@PathVariable Long id, @RequestBody Usuario updatedUsuario) {
-		Usuario usuario = usuariorepository.findById(id).get();
+	@PutMapping("/usuario")
+	public Usuario editarUsuario(@RequestBody Usuario updatedUsuario) {
+		Usuario usuario = usuariorepository.findById(updatedUsuario.getId()).get();
 		usuario.setIdentificacion(updatedUsuario.getIdentificacion());
 		usuario.setClave(updatedUsuario.getClave());
 		usuario.setCorreo(updatedUsuario.getCorreo());
@@ -73,8 +79,7 @@ public class UsuarioController {
 		usuario.setPreferencias(updatedUsuario.getPreferencias());
 		usuario.setRecibir_notificaciones(updatedUsuario.getRecibir_notificaciones());
 		usuario.setRecibir_novedades(updatedUsuario.getRecibir_novedades());
-		usuario.setInmueble(updatedUsuario.getInmueble());
-		
+		usuario.setCiudad(updatedUsuario.getCiudad());	
 		usuariorepository.save(usuario);
 		return usuario;
 	}
@@ -82,7 +87,15 @@ public class UsuarioController {
 	@DeleteMapping("/usuario/{id}")
 	public Usuario eliminarUsuario(@PathVariable Long id) {
 		Usuario usuario = usuariorepository.findById(id).get();
-		usuariorepository.deleteById(id);
+		Set<Inmueble> inmuebles = usuario.getInmueble();
+		Set<Inmueble> newInmueble = new HashSet<Inmueble>();
+		for(Inmueble inmueble: inmuebles) {
+			inmueble.setEstado("Inactivo");
+			newInmueble.add(inmueble);
+		}
+		inmuebleRepository.saveAll(newInmueble);
+		usuario.setEstado("Inactivo");
+		usuariorepository.save(usuario);
 		return usuario;
 	}
 	
